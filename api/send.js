@@ -25,6 +25,7 @@ function parseForm(req) {
       multiples: false,
       maxFileSize: 5 * 1024 * 1024,
       allowEmptyFiles: true,
+      minFileSize: 0,
     });
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
