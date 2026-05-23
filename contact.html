@@ -608,7 +608,7 @@ display: block; width: 100% !important;
 
         <form
             id="contact-form"
-            action="/send"
+            action="/api/send"
             method="POST"
             enctype="multipart/form-data"
         >
@@ -669,7 +669,7 @@ display: block; width: 100% !important;
         btn.textContent = 'Sending…';
         btn.disabled = true;
         var data = new FormData(form);
-        fetch('/send', {
+        fetch('/api/send', {
             method: 'POST',
             body: data
         }).then(function(res) { return res.json(); })
@@ -683,7 +683,7 @@ display: block; width: 100% !important;
                 btn.disabled = false;
             }
         }).catch(function() {
-            alert('Network error. Make sure the server is running (node server.js).');
+            alert('Network error. Please try again or contact us directly.');
             btn.textContent = 'Send Message';
             btn.disabled = false;
         });
