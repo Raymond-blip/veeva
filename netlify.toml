@@ -3,6 +3,9 @@
   command = ""
   functions = "netlify/functions"
 
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
 [[redirects]]
   from = "/send"
   to = "/.netlify/functions/send"

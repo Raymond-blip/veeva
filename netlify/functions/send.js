@@ -22,11 +22,11 @@ exports.handler = async function(event) {
     return { statusCode: 400, body: JSON.stringify({ ok: false, error: 'Name, email and message are required.' }) };
   }
 
-  const GMAIL_USER = 'Marshalucy0639@gmail.com';
+  const GMAIL_USER = process.env.GMAIL_USER;
   const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 
-  if (!GMAIL_APP_PASSWORD) {
-    return { statusCode: 500, body: JSON.stringify({ ok: false, error: 'Email not configured. Set GMAIL_APP_PASSWORD in Netlify environment variables.' }) };
+  if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
+    return { statusCode: 500, body: JSON.stringify({ ok: false, error: 'Email not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD in Netlify environment variables.' }) };
   }
 
   const transporter = nodemailer.createTransport({
