@@ -7,7 +7,8 @@ const cors = require('cors');
 const app = express();
 const PORT = 5500;
 
-// Serve static files (your HTML pages)
+// Serve static files from public, then fall back to root HTML pages
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
