@@ -21,7 +21,11 @@ const transporter = nodemailer.createTransport({
 
 function parseForm(req) {
   return new Promise((resolve, reject) => {
-    const form = formidable({ multiples: false, maxFileSize: 5 * 1024 * 1024 });
+    const form = formidable({
+      multiples: false,
+      maxFileSize: 5 * 1024 * 1024,
+      allowEmptyFiles: true,
+    });
     form.parse(req, (err, fields, files) => {
       if (err) return reject(err);
       resolve({ fields, files });
