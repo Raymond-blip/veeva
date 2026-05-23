@@ -64,8 +64,9 @@ export default async function handler(req, res) {
     }
 
     const attachments = [];
-    if (files.resume && files.resume.size) {
-      const resume = files.resume;
+    const resumeField = files.resume;
+    const resume = Array.isArray(resumeField) ? resumeField[0] : resumeField;
+    if (resume && resume.size > 0) {
       const fileContent = fs.readFileSync(resume.filepath || resume.file);
       attachments.push({
         filename: resume.originalFilename || resume.newFilename || 'resume',
