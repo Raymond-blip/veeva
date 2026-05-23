@@ -43,7 +43,7 @@ const upload = multer({
 //   4. Paste it below as GMAIL_APP_PASSWORD
 // ──────────────────────────────────────────────────────────────────────────
 const GMAIL_USER = 'Marshalucy0639@gmail.com';
-const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD || 'ixzexxzdmenaucnz'; // Gmail App Password
+const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
