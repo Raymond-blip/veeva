@@ -2,6 +2,7 @@
   "name": "veeva-netlify-functions",
   "version": "1.0.0",
   "dependencies": {
-    "nodemailer": "6.9.9"
+    "nodemailer": "6.9.9",
+    "lambda-multipart-parser": "^1.0.1"
   }
 }

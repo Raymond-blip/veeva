@@ -1,38 +1,22 @@
 const nodemailer = require('nodemailer');
+const parser = require('lambda-multipart-parser');
 
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: JSON.stringify({ ok: false, error: 'Method not allowed' }) };
   }
 
-  let fields = {};
-
-  // Parse multipart or urlencoded body
+  let result;
   try {
-    const contentType = event.headers['content-type'] || '';
-    if (contentType.includes('application/json')) {
-      fields = JSON.parse(event.body);
-    } else if (contentType.includes('application/x-www-form-urlencoded')) {
-      event.body.split('&').forEach(pair => {
-        const [k, v] = pair.split('=');
-        fields[decodeURIComponent(k)] = decodeURIComponent(v || '');
-      });
-    } else {
-      // multipart/form-data — parse manually (basic)
-      const boundary = contentType.split('boundary=')[1];
-      if (boundary) {
-        const parts = event.body.split('--' + boundary);
-        parts.forEach(part => {
-          const match = part.match(/name="([^"]+)"\r\n\r\n([\s\S]*?)\r\n$/);
-          if (match) fields[match[1]] = match[2];
-        });
-      }
-    }
+    result = await parser.parse(event);
   } catch (e) {
+    console.error('Parse error:', e);
     return { statusCode: 400, body: JSON.stringify({ ok: false, error: 'Could not parse form data' }) };
   }
 
-  const { name, email, phone, subject, message } = fields;
+  const { name, email, phone, subject, message } = result;
+  const files = result.files || [];
+  const resume = files.find(f => f.fieldname === 'resume');
 
   if (!name || !email || !message) {
     return { statusCode: 400, body: JSON.stringify({ ok: false, error: 'Name, email and message are required.' }) };
@@ -64,7 +48,12 @@ exports.handler = async function(event) {
         <tr style="background:#f5f8ff;"><td style="padding:8px;font-weight:bold;">Subject</td><td style="padding:8px;">${subject || '—'}</td></tr>
         <tr><td style="padding:8px;font-weight:bold;vertical-align:top;">Message</td><td style="padding:8px;">${message.replace(/\n/g, '<br>')}</td></tr>
       </table>
-    `
+    `,
+    attachments: resume ? [{
+      filename: resume.filename,
+      content: resume.content,
+      contentType: resume.contentType
+    }] : []
   };
 
   try {
