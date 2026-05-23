@@ -46,6 +46,10 @@ const upload = multer({
 const GMAIL_USER = 'Marshalucy0639@gmail.com';
 const GMAIL_APP_PASSWORD = process.env.GMAIL_APP_PASSWORD;
 
+if (!GMAIL_APP_PASSWORD) {
+  console.error('ERROR: GMAIL_APP_PASSWORD is not set. Add it to Vercel environment variables as a secret.');
+}
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
