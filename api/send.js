@@ -29,6 +29,16 @@ function parseForm(req) {
   });
 }
 
+function normalizeField(value) {
+  if (Array.isArray(value)) {
+    return value.join(', ');
+  }
+  if (value === undefined || value === null) {
+    return '';
+  }
+  return String(value);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ ok: false, error: 'Method not allowed' });
@@ -42,7 +52,11 @@ export default async function handler(req, res) {
 
   try {
     const { fields, files } = await parseForm(req);
-    const { name, email, phone, subject, message } = fields;
+    const name = normalizeField(fields.name);
+    const email = normalizeField(fields.email);
+    const phone = normalizeField(fields.phone);
+    const subject = normalizeField(fields.subject);
+    const message = normalizeField(fields.message);
 
     if (!name || !email || !message) {
       res.status(400).json({ ok: false, error: 'Name, email and message are required.' });
